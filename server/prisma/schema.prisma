@@ -4,8 +4,9 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -18,16 +19,58 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+
+  profile   StudentProfile?
+  skills    UserSkill[]
+}
+
+model StudentProfile {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  branch          String?
+  semester        Int?
+  targetJobRoleId Int?
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetJobRole JobRole? @relation(fields: [targetJobRoleId], references: [id])
 }
 
 model JobRole {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   description String?
+
+  profiles StudentProfile[]
+  skills   JobRoleSkill[]
 }
 
 model Skill {
   id       Int     @id @default(autoincrement())
   name     String  @unique
   category String?
+
+  jobRoles   JobRoleSkill[]
+  userSkills UserSkill[]
+}
+
+model JobRoleSkill {
+  jobRoleId     Int
+  skillId      Int
+  requiredLevel Int @default(1)
+
+  jobRole JobRole @relation(fields: [jobRoleId], references: [id], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([jobRoleId, skillId])
+}
+
+model UserSkill {
+  userId  Int
+  skillId Int
+  level   Int @default(0)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([userId, skillId])
 }
