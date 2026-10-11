@@ -1,6 +1,7 @@
 
 // App.jsx -> traffic controller for your frontend
 
+import ProtectedRoute from "./components/ProtectedRoute";
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -18,14 +19,16 @@ function App(){
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
 
-                <Route element={<MainLayout/>}>
-                    <Route path="/" element={<Dashboard/>}/>
-                    <Route path="/dashboard" element={<Dashboard/>}/>
-                    <Route path="/profile" element={<Profile/>}/>
-                    <Route path="/job-roles" element={<JobRoles/>}/>
-                    <Route path="/skill-gap" element={<SkillGap/>}/>
-                    <Route path="/recommendations" element={<Recommendations/>}/>
-                </Route>
+                <Route element={<ProtectedRoute/>}>
+    <Route element={<MainLayout/>}>
+        <Route path="/" element={<Dashboard/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/job-roles" element={<JobRoles/>}/>
+        <Route path="/skill-gap" element={<SkillGap/>}/>
+        <Route path="/recommendations" element={<Recommendations/>}/>
+    </Route>
+</Route>
             </Routes>
         </BrowserRouter>
     );
