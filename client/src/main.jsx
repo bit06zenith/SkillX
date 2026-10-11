@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
+import {AuthProvider} from "./context/AuthContext";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <AuthProvider>
+            <App/>
+        </AuthProvider>
+    </StrictMode>
+);
+
+
+// Now every page/component inside App can access:
+// user, token, isAuthenticated, login(), logout(), through AuthContext
